@@ -61,8 +61,7 @@ function formatEmail(email: string) {
     .replaceAll("\n", "<span class='space'>\n</span>");
 }
 
-// Quiz functionality
-const rawQuestions: QuizQuestion[] = [
+const questions: QuizQuestion[] = [
   valid("easy@example.com", "No tricks here, just easing you into it."),
   valid(
     "easy+tag@example.com",
@@ -118,53 +117,11 @@ const rawQuestions: QuizQuestion[] = [
   ),
 ];
 
-// Quiz state
-let questions: QuizQuestion[] = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let answered = false;
 
-// URL parameter helpers
-function getUrlParams(): { q?: number; a?: number } {
-  const params = new URLSearchParams(window.location.search);
-  const q = params.get("q");
-  const a = params.get("a");
-  return {
-    q: q ? parseInt(q) - 1 : undefined, // Convert to 0-based index
-    a: a ? parseInt(a) - 1 : undefined, // Convert to 0-based index
-  };
-}
-
-function updateUrl(): void {
-  const url = new URL(window.location.href);
-  url.searchParams.set("q", (currentQuestionIndex + 1).toString()); // Convert to 1-based
-  if (answered) {
-    const selectedOption = document.querySelector(".option.selected");
-    if (selectedOption) {
-      const index = Array.from(selectedOption.parentNode!.children).indexOf(
-        selectedOption
-      );
-      url.searchParams.set("a", (index + 1).toString()); // Convert to 1-based
-    }
-  } else {
-    url.searchParams.delete("a");
-  }
-  window.history.replaceState({}, "", url.toString());
-}
-
-function initializeQuiz(): void {
-  questions = [...rawQuestions];
-}
-
 function startQuiz(): void {
-  initializeQuiz();
-
-  // Check for URL parameters
-  const { q, a } = getUrlParams();
-  if (q !== undefined && q >= 0 && q < questions.length) {
-    currentQuestionIndex = q;
-  }
-
   document.getElementById("startScreen")?.classList.add("hidden");
   document.getElementById("quizScreen")?.classList.remove("hidden");
   const totalQuestionsEl = document.getElementById("totalQuestions");
@@ -172,11 +129,6 @@ function startQuiz(): void {
     totalQuestionsEl.textContent = questions.length.toString();
   }
   showQuestion();
-
-  // If there's an answer parameter, auto-select it
-  if (a !== undefined && a >= 0 && a <= 1) {
-    setTimeout(() => selectOption(a), 100); // Small delay to ensure DOM is ready
-  }
 }
 
 function showQuestion(): void {
@@ -219,7 +171,6 @@ function showQuestion(): void {
   document.getElementById("nextButton")?.classList.add("hidden");
 
   answered = false;
-  updateUrl();
 }
 
 function selectOption(index: number): void {
@@ -265,7 +216,6 @@ function selectOption(index: number): void {
   }
 
   document.getElementById("nextButton")?.classList.remove("hidden");
-  updateUrl();
 }
 
 function nextQuestion(): void {
@@ -290,7 +240,13 @@ function showResults(): void {
   const percentage = Math.round((score / questions.length) * 100);
   let message = "";
 
-  if (percentage === 100) {
+  if (score === 11) {
+    message =
+      "This is the score you get if you mash 1 and enter over and over.";
+  } else if (score === 5) {
+    message =
+      "This is the score you get if you mash 2 and enter over and over. Should've mashed 1.";
+  } else if (percentage === 100) {
     message = "Good lord, did you sit and read all of the RFCs? Go outside.";
   } else if (percentage >= 80) {
     message = "You really shouldn't be scoring this high.";
@@ -423,19 +379,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize quiz if on quiz page
   const startScreen = document.getElementById("startScreen");
-  const { q } = getUrlParams();
 
   if (startScreen) {
     startScreen.classList.remove("hidden");
   }
-
-  // Auto-start quiz if there's a question parameter
-  if (q !== undefined) {
-    startQuiz();
-  }
-
-  startQuiz();
-  showResults();
 });
 
 // Keyboard event handlers for quiz
