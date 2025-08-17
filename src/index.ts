@@ -1,5 +1,4 @@
-// Email validation quiz TypeScript
-import { div } from "./dom.js";
+import { div } from "./dom";
 
 interface QuizQuestion {
   email: string;
@@ -92,6 +91,10 @@ const rawQuestions: QuizQuestion[] = [
     "Similar to the local part, the domain part can also have spaces around it. Not allowed in the middle, though."
   ),
   valid(
+    "hello(wtf is this?)@samwho.dev",
+    "Technically valid. Did you know emails can have comments? Anything (in parens) is a comment. Introduced in RFC 822, obsoleted by RFC 5322."
+  ),
+  valid(
     '":(){ :|:& };:"@example.com',
     "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address."
   ),
@@ -105,12 +108,13 @@ const rawQuestions: QuizQuestion[] = [
     "The square bracket syntax allows you to specify IP addresses instead of domains, and ::1 is the shorthand for localhost in IPv6."
   ),
   valid(
-    "user+tag+another@example.com",
-    "Multiple plus signs and tags are perfectly valid."
+    "poop@[💩]",
+    "As far as I can tell from reading RFC 6532, this is valid. lol. lmao, even."
   ),
+  valid("👉@👈", "I can't believe it, either."),
   valid(
-    '"spaces in quotes"@example.com',
-    "Quoted strings can contain spaces and many special characters."
+    '"@"@[@]',
+    "You should complain to your provider if they don't allow you to send mail to this one."
   ),
 ];
 
@@ -287,16 +291,20 @@ function showResults(): void {
   let message = "";
 
   if (percentage === 100) {
-    message = "Perfect! You clearly know your email validation specs.";
+    message = "Good lord, did you sit and read all of the RFCs? Go outside.";
   } else if (percentage >= 80) {
-    message = "Excellent! You have a solid understanding of email validation.";
+    message = "You really shouldn't be scoring this high.";
   } else if (percentage >= 60) {
-    message = "Good job! Email validation is trickier than most people think.";
+    message = "Yay! You're slightly above average!";
   } else if (percentage >= 40) {
-    message = "Not bad, but email validation has some surprising edge cases!";
-  } else {
     message =
-      "Email validation is full of surprises. The RFC 5322 spec might shock you!";
+      "Yay! You're average! Time to start making plans for what you'll do when an LLM takes your job.";
+  } else if (percentage >= 20) {
+    message =
+      "This is embarassing, isn't it? I won't tell anyone if you don't.";
+  } else if (percentage >= 0) {
+    message =
+      "This is impressively bad. You had to overcome serious odds to score this low. Well done.";
   }
 
   const resultMessageEl = document.getElementById("resultMessage");
@@ -304,7 +312,7 @@ function showResults(): void {
     resultMessageEl.textContent = message;
   }
 
-  const shareText = `I scored ${score}/${questions.length} on the email validation quiz at https://e-mail.wtf - how well do you know email validation?`;
+  const shareText = `I scored ${score}/${questions.length} on https://e-mail.wtf and all I got was this lousy text to share on social media.`;
   const shareMessageEl = document.getElementById("shareMessage");
   if (shareMessageEl) {
     shareMessageEl.textContent = shareText;
@@ -318,8 +326,18 @@ function copyShareMessage(): void {
   if (shareMessageEl) {
     const shareMessage = shareMessageEl.textContent;
     if (shareMessage) {
-      navigator.clipboard.writeText(shareMessage);
-      showToast("Results copied to clipboard!");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(shareMessage)
+          .then(() => {
+            showToast("Results copied to clipboard!");
+          })
+          .catch(() => {
+            fallbackCopyToClipboard(shareMessage);
+          });
+      } else {
+        fallbackCopyToClipboard(shareMessage);
+      }
     }
   }
 }
@@ -334,8 +352,18 @@ function shareResults(): void {
           text: shareMessage,
         });
       } else {
-        navigator.clipboard.writeText(shareMessage);
-        showToast("Results copied to clipboard!");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(shareMessage)
+            .then(() => {
+              showToast("Results copied to clipboard!");
+            })
+            .catch(() => {
+              fallbackCopyToClipboard(shareMessage);
+            });
+        } else {
+          fallbackCopyToClipboard(shareMessage);
+        }
       }
     }
   }
@@ -350,6 +378,27 @@ function showToast(message: string): void {
       toast.classList.remove("show");
     }, 3000);
   }
+}
+
+function fallbackCopyToClipboard(text: string): void {
+  // Create a temporary textarea element
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.left = "-999999px";
+  textArea.style.top = "-999999px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    document.execCommand("copy");
+    showToast("Results copied to clipboard!");
+  } catch (err) {
+    showToast("Could not copy to clipboard");
+  }
+
+  document.body.removeChild(textArea);
 }
 
 // Global functions for HTML onclick handlers
@@ -384,6 +433,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (q !== undefined) {
     startQuiz();
   }
+
+  startQuiz();
+  showResults();
 });
 
 // Keyboard event handlers for quiz

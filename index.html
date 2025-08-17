@@ -50,7 +50,9 @@
         </header>
 
         <p class="subsubtitle">
-          Prepare to get RFC 5322'd.
+          Decide if each email address is valid or not. I used the <a
+            href="https://www.npmjs.com/package/email-addresses">email-addresses</a> library to verify against the
+          relevant RFCs. Enjoy.
         </p>
         <button class="button" onclick="startQuiz()">Start Quiz</button>
       </div>
@@ -85,24 +87,10 @@
       <p id="resultMessage"></p>
 
       <div class="share-box">
-        <button class="copy-button" onclick="copyShareMessage()" title="Copy to clipboard">
-          <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-        </button>
         <div id="shareMessage"></div>
       </div>
 
       <div class="button-row">
-        <button class="button icon-button share-button" onclick="shareResults()">
-          <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-            <polyline points="16,6 12,2 8,6"></polyline>
-            <line x1="12" y1="2" x2="12" y2="15"></line>
-          </svg>
-          Share
-        </button>
         <button class="button icon-button copy-button-main" onclick="copyShareMessage()">
           <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -112,6 +100,9 @@
         </button>
       </div>
       <div class="footer">
+        <p>
+          If you enjoyed this, give <a href="https://jsdate.wtf">jsdate.wtf</a> a try!
+        </p>
         <p>
           made with ❤️ by <a href="https://samwho.dev" target="_blank" rel="noopener">samwho</a>
         </p>

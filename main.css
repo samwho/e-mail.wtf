@@ -390,9 +390,12 @@ h1 {
   color: var(--color-primary);
   font-family: var(--font-mono);
   font-weight: bold;
+  line-height: 1;
+  margin-bottom: 1rem;
 }
 
 .subtitle {
+  line-height: 1.2;
   color: var(--color-text-secondary);
   font-size: var(--font-size-xl);
   font-style: italic;
@@ -400,15 +403,16 @@ h1 {
 
 .subsubtitle {
   color: var(--color-text-secondary);
-  font-family: var(--font-mono);
+  font-family: var(--font-system);
   width: 75%;
   margin: 0 auto;
   font-size: var(--font-size-lg);
-  font-style: italic;
   background-color: var(--color-bg-light);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  text-wrap: balance;
+  text-wrap: pretty;
+  line-height: 1.2;
+  text-align: left;
 }
 
 .email-container {
@@ -427,7 +431,7 @@ h1 {
   max-width: 600px;
   text-align: center;
   min-height: 6rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .email-container.long {
@@ -687,6 +691,8 @@ h1 {
   font-family: var(--font-mono);
   font-size: var(--font-size-lg);
   transition: border-color 0.2s ease;
+  resize: vertical;
+  min-height: 3.5rem;
 }
 
 .input-field:focus {
@@ -725,6 +731,11 @@ h1 {
   gap: var(--spacing-2xl);
   height: 600px;
   max-width: 100vw;
+}
+
+#resultMessage,
+#shareMessage {
+  text-wrap: balance;
 }
 
 .result-panel {

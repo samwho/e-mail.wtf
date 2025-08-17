@@ -1,5 +1,5 @@
 // Email validator TypeScript
-import { div } from './dom.js';
+import { div } from "./dom.js";
 
 interface EmailParseResult {
   name?: string;
@@ -13,26 +13,29 @@ interface EmailParseResult {
 
 // Theme management
 function getTheme(): string {
-  const savedTheme = localStorage.getItem('theme');
+  const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
     return savedTheme;
   }
-  
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    return 'light';
+
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: light)").matches
+  ) {
+    return "light";
   }
-  
-  return 'dark';
+
+  return "dark";
 }
 
 function setTheme(theme: string): void {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
 }
 
 function toggleTheme(): void {
   const currentTheme = getTheme();
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  const newTheme = currentTheme === "dark" ? "light" : "dark";
   setTheme(newTheme);
 }
 
@@ -45,17 +48,17 @@ function syntaxHighlightJSON(obj: any): string {
   return json.replace(
     /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
     (match) => {
-      let cls = 'json-number';
+      let cls = "json-number";
       if (/^"/.test(match)) {
         if (/:$/.test(match)) {
-          cls = 'json-key';
+          cls = "json-key";
         } else {
-          cls = 'json-string';
+          cls = "json-string";
         }
       } else if (/true|false/.test(match)) {
-        cls = 'json-boolean';
+        cls = "json-boolean";
       } else if (/null/.test(match)) {
-        cls = 'json-null';
+        cls = "json-null";
       }
       return `<span class="${cls}">${match}</span>`;
     }
@@ -63,10 +66,12 @@ function syntaxHighlightJSON(obj: any): string {
 }
 
 function parseEmail(): void {
-  const emailInputEl = document.getElementById('emailInput') as HTMLInputElement;
-  const rfc6532El = document.getElementById('rfc6532') as HTMLInputElement;
-  const strictEl = document.getElementById('strict') as HTMLInputElement;
-  const rejectTLDEl = document.getElementById('rejectTLD') as HTMLInputElement;
+  const emailInputEl = document.getElementById(
+    "emailInput"
+  ) as HTMLInputElement;
+  const rfc6532El = document.getElementById("rfc6532") as HTMLInputElement;
+  const strictEl = document.getElementById("strict") as HTMLInputElement;
+  const rejectTLDEl = document.getElementById("rejectTLD") as HTMLInputElement;
 
   if (!emailInputEl) return;
 
@@ -76,52 +81,58 @@ function parseEmail(): void {
   const rejectTLD = rejectTLDEl?.checked || false;
 
   const options = {
+    input: emailInput,
     rfc6532,
     strict,
-    rejectTLD
+    rejectTLD,
   };
 
   try {
     // Parse the email address using the email-addresses library
-    const result = (window as any).emailAddresses?.parseOneAddress(emailInput, options);
-    
-    const resultsSection = document.getElementById('resultsSection');
-    const statusIndicator = document.getElementById('statusIndicator');
-    const parsedData = document.getElementById('parsedData');
-    const astVisualization = document.getElementById('astVisualization');
+    const result = (window as any).emailAddresses?.parseOneAddress(options);
 
-    if (resultsSection) resultsSection.classList.remove('hidden');
+    const resultsSection = document.getElementById("resultsSection");
+    const statusIndicator = document.getElementById("statusIndicator");
+    const parsedData = document.getElementById("parsedData");
+    const astVisualization = document.getElementById("astVisualization");
+
+    if (resultsSection) resultsSection.classList.remove("hidden");
 
     if (result) {
       // Success case
-      if (statusIndicator) statusIndicator.className = 'status-indicator status-valid';
+      if (statusIndicator)
+        statusIndicator.className = "status-indicator status-valid";
       if (parsedData) parsedData.innerHTML = syntaxHighlightJSON(result);
-      
+
       // Create AST visualization
       if (astVisualization) {
-        astVisualization.innerHTML = '';
+        astVisualization.innerHTML = "";
         createASTVisualization(result, astVisualization);
       }
     } else {
       // Failed to parse
-      if (statusIndicator) statusIndicator.className = 'status-indicator status-invalid';
+      if (statusIndicator)
+        statusIndicator.className = "status-indicator status-invalid";
       if (parsedData) {
-        parsedData.innerHTML = '<div class="error-message">Failed to parse email address</div>';
+        parsedData.innerHTML =
+          '<div class="error-message">Failed to parse email address</div>';
       }
-      
+
       if (astVisualization) {
-        astVisualization.innerHTML = '<div class="ast-node error"><div class="node-label">Parsing Error</div><div class="node-value">The email address could not be parsed according to RFC 5322 specifications</div></div>';
+        astVisualization.innerHTML =
+          '<div class="ast-node error"><div class="node-label">Parsing Error</div><div class="node-value">The email address could not be parsed according to RFC 5322 specifications</div></div>';
       }
     }
   } catch (error: any) {
     // Exception occurred
-    const resultsSection = document.getElementById('resultsSection');
-    const statusIndicator = document.getElementById('statusIndicator');
-    const parsedData = document.getElementById('parsedData');
-    const astVisualization = document.getElementById('astVisualization');
+    const resultsSection = document.getElementById("resultsSection");
+    const statusIndicator = document.getElementById("statusIndicator");
+    const parsedData = document.getElementById("parsedData");
+    const astVisualization = document.getElementById("astVisualization");
 
-    if (resultsSection) resultsSection.classList.remove('hidden');
-    if (statusIndicator) statusIndicator.className = 'status-indicator status-invalid';
+    if (resultsSection) resultsSection.classList.remove("hidden");
+    if (statusIndicator)
+      statusIndicator.className = "status-indicator status-invalid";
     if (parsedData) {
       parsedData.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
     }
@@ -131,22 +142,25 @@ function parseEmail(): void {
   }
 }
 
-function createASTVisualization(data: EmailParseResult, container: HTMLElement): void {
+function createASTVisualization(
+  data: EmailParseResult,
+  container: HTMLElement
+): void {
   // Main email address node
   const emailNode = div(
-    { className: 'ast-node email-address' },
-    div({ className: 'node-label' }, 'Email Address'),
-    div({ className: 'node-value' }, data.address || 'N/A')
+    { className: "ast-node email-address" },
+    div({ className: "node-label" }, "Email Address"),
+    div({ className: "node-value" }, data.address || "N/A")
   );
 
-  const childrenContainer = div({ className: 'node-children' });
+  const childrenContainer = div({ className: "node-children" });
 
   // Display name (if present)
   if (data.name) {
     const nameNode = div(
-      { className: 'ast-node display-name' },
-      div({ className: 'node-label' }, 'Display Name'),
-      div({ className: 'node-value' }, `"${data.name}"`)
+      { className: "ast-node display-name" },
+      div({ className: "node-label" }, "Display Name"),
+      div({ className: "node-value" }, `"${data.name}"`)
     );
     childrenContainer.appendChild(nameNode);
   }
@@ -154,9 +168,9 @@ function createASTVisualization(data: EmailParseResult, container: HTMLElement):
   // Local part
   if (data.local) {
     const localNode = div(
-      { className: 'ast-node local-part' },
-      div({ className: 'node-label' }, 'Local Part'),
-      div({ className: 'node-value' }, data.local)
+      { className: "ast-node local-part" },
+      div({ className: "node-label" }, "Local Part"),
+      div({ className: "node-value" }, data.local)
     );
     childrenContainer.appendChild(localNode);
   }
@@ -164,21 +178,24 @@ function createASTVisualization(data: EmailParseResult, container: HTMLElement):
   // Domain
   if (data.domain) {
     const domainNode = div(
-      { className: 'ast-node domain' },
-      div({ className: 'node-label' }, 'Domain'),
-      div({ className: 'node-value' }, data.domain)
+      { className: "ast-node domain" },
+      div({ className: "node-label" }, "Domain"),
+      div({ className: "node-value" }, data.domain)
     );
     childrenContainer.appendChild(domainNode);
   }
 
   // Additional properties
-  const additionalProps = ['type', 'format'];
-  additionalProps.forEach(prop => {
+  const additionalProps = ["type", "format"];
+  additionalProps.forEach((prop) => {
     if (data[prop]) {
       const propNode = div(
-        { className: 'ast-node' },
-        div({ className: 'node-label' }, prop.charAt(0).toUpperCase() + prop.slice(1)),
-        div({ className: 'node-value' }, data[prop])
+        { className: "ast-node" },
+        div(
+          { className: "node-label" },
+          prop.charAt(0).toUpperCase() + prop.slice(1)
+        ),
+        div({ className: "node-value" }, data[prop])
       );
       childrenContainer.appendChild(propNode);
     }
@@ -190,8 +207,13 @@ function createASTVisualization(data: EmailParseResult, container: HTMLElement):
 
 function loadExample(email: string): void {
   // Decode HTML entities for the input
-  const decodedEmail = email.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  const emailInputEl = document.getElementById('emailInput') as HTMLInputElement;
+  const decodedEmail = email
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+  const emailInputEl = document.getElementById(
+    "emailInput"
+  ) as HTMLInputElement;
   if (emailInputEl) {
     emailInputEl.value = decodedEmail;
     parseEmail();
@@ -203,30 +225,32 @@ function loadExample(email: string): void {
 (window as any).loadExample = loadExample;
 
 // Initialize theme and set up event listeners for validator
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   setTheme(getTheme());
-  
+
   if (window.matchMedia) {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-    mediaQuery.addEventListener('change', (e) => {
-      if (!localStorage.getItem('theme')) {
-        setTheme(e.matches ? 'light' : 'dark');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
+    mediaQuery.addEventListener("change", (e) => {
+      if (!localStorage.getItem("theme")) {
+        setTheme(e.matches ? "light" : "dark");
       }
     });
   }
-  
+
   // Initialize validator functionality
-  const emailInput = document.getElementById('emailInput') as HTMLInputElement;
+  const emailInput = document.getElementById("emailInput") as HTMLInputElement;
   if (emailInput) {
     // Parse the default example on load
     parseEmail();
-    
+
     // Set up real-time parsing
-    emailInput.addEventListener('input', parseEmail);
-    
+    emailInput.addEventListener("input", parseEmail);
+
     // Auto-parse when options change
-    document.getElementById('rfc6532')?.addEventListener('change', parseEmail);
-    document.getElementById('strict')?.addEventListener('change', parseEmail);
-    document.getElementById('rejectTLD')?.addEventListener('change', parseEmail);
+    document.getElementById("rfc6532")?.addEventListener("change", parseEmail);
+    document.getElementById("strict")?.addEventListener("change", parseEmail);
+    document
+      .getElementById("rejectTLD")
+      ?.addEventListener("change", parseEmail);
   }
 });
