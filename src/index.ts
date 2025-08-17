@@ -248,7 +248,20 @@ function showResults(): void {
   const percentage = Math.round((score / questions.length) * 100);
   let message = "";
 
-  if (percentage === 100) {
+  const numValidQuestions = questions.filter(
+    (q) => q.answer === "valid"
+  ).length;
+  const numInvalidQuestions = questions.filter(
+    (q) => q.answer === "invalid"
+  ).length;
+
+  if (score === numValidQuestions) {
+    message =
+      'This is the score you get when you answer "valid" for every question. Good job.';
+  } else if (score === numInvalidQuestions) {
+    message =
+      'This is the score you get when you answer "invalid" for every question. Should have said "valid".';
+  } else if (percentage === 100) {
     message = "Good lord, did you sit and read all of the RFCs? Go outside.";
   } else if (percentage >= 80) {
     message = "You really shouldn't be scoring this high.";
