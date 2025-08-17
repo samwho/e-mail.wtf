@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="Email Address Parser & Visualizer">
+  <meta property="og:description" content="Visualize how email addresses are parsed according to RFC 5322">
+  <meta property="og:url" content="https://e-mail.wtf/validator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://e-mail.wtf/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="e-mail.wtf">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Email Address Parser & Visualizer">
+  <meta name="twitter:description" content="Visualize how email addresses are parsed according to RFC 5322">
+  <meta name="twitter:image" content="https://e-mail.wtf/og.png">
+
+  <title>Email Address Parser & Visualizer</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+  <!-- Theme toggle button -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <div class="quiz-container">
+    <div class="header">
+      <h1>Email Parser & Visualizer</h1>
+      <p>
+        Enter an email address to see how it's parsed according to RFC 5322 specifications.
+        This tool uses the <strong>email-addresses</strong> library to break down email addresses into their components.
+      </p>
+    </div>
+
+    <div class="examples-section">
+      <h3 class="examples-title">Example Email Addresses</h3>
+      <div class="examples-grid">
+        <div class="example-item" onclick="loadExample('simple@example.com')">
+          <div class="example-email">simple@example.com</div>
+        </div>
+        <div class="example-item" onclick="loadExample('&quot;John Doe&quot; &lt;john@example.com&gt;')">
+          <div class="example-email">"John Doe" &lt;john@example.com&gt;</div>
+        </div>
+        <div class="example-item" onclick="loadExample('user+tag@example.com')">
+          <div class="example-email">user+tag@example.com</div>
+        </div>
+        <div class="example-item"
+          onclick="loadExample('&quot;very.(),:;&lt;&gt;[]\&quot;.VERY.\&quot;very@\\ \&quot;very\&quot;.unusual&quot;@strange.example.com')">
+          <div class="example-email">"very.(),:;&lt;&gt;[]\"...unusual"@strange.example.com</div>
+        </div>
+        <div class="example-item" onclick="loadExample('user@[192.168.1.1]')">
+          <div class="example-email">user@[192.168.1.1]</div>
+        </div>
+        <div class="example-item" onclick="loadExample('user@example')">
+          <div class="example-email">user@example</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label class="input-label" for="emailInput">Email Address:</label>
+        <input type="text" id="emailInput" class="input-field" placeholder='Try: "John Doe" <john@example.com>'
+          value='"John Doe" <john@example.com>'>
+
+        <div class="options-row">
+          <div class="option-group">
+            <input type="checkbox" id="rfc6532" class="checkbox" checked>
+            <label for="rfc6532" class="checkbox-label">RFC 6532 (Unicode support)</label>
+          </div>
+          <div class="option-group">
+            <input type="checkbox" id="strict" class="checkbox">
+            <label for="strict" class="checkbox-label">Strict mode (no obsolete features)</label>
+          </div>
+          <div class="option-group">
+            <input type="checkbox" id="rejectTLD" class="checkbox">
+            <label for="rejectTLD" class="checkbox-label">Require TLD in domain</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-section hidden" id="resultsSection">
+      <div class="result-panel">
+        <h2 class="panel-title">
+          <span class="status-indicator" id="statusIndicator"></span>
+          Parse Result
+        </h2>
+        <div class="parsed-data" id="parsedData"></div>
+      </div>
+
+      <div class="result-panel">
+        <h2 class="panel-title">AST Visualization</h2>
+        <div class="ast-visualization" id="astVisualization"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load email-addresses library from CDN -->
+  <script src="https://unpkg.com/email-addresses@5.0.0/lib/email-addresses.min.js"></script>
+  <script src="out/validator.js"></script>
+</body>
+
+</html>

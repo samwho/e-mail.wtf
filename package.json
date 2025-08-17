@@ -1,0 +1,15 @@
+{
+  "name": "e-mail.wtf",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun build ./src/index.ts ./src/validator.ts --sourcemap=linked --public-path=./ --outdir ./out --target browser --minify --watch"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
