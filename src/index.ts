@@ -79,7 +79,7 @@ const questions: QuizQuestion[] = [
   ),
   valid(
     " maybe-like-this @example.com",
-    "That's actually allowed for some reason. The spaces should be ignored. My email client doesn't like this."
+    "That's actually allowed for some reason. The spaces get ignored by the spec. My email client rejects this, though."
   ),
   invalid(
     "tailing-dot.@example.com",
@@ -87,19 +87,19 @@ const questions: QuizQuestion[] = [
   ),
   valid(
     "fed-up-yet@ example.com ",
-    "Similar to the local part, the domain part can also have spaces around it. Not allowed in the middle, though."
+    "Similar to the local part, the domain part can also have spaces around it. Not allowed in the middle, though, that would be silly."
   ),
   valid(
-    "hello(wtf is this?)@samwho.dev",
-    "Technically valid. Did you know emails can have comments? Anything (in parens) is a comment. Introduced in RFC 822, obsoleted by RFC 5322."
+    "normal(wtf is this?)@example.com",
+    "Technically valid. Did you know emails could have comments? Anything (in parens) is a comment. Introduced in RFC 822, but made obsolete by RFC 5322."
   ),
   valid(
     '":(){ :|:& };:"@example.com',
-    "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address."
+    "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address. This is invalid without the quotes."
   ),
   invalid(
     "accordingtoallknownlawsofaviationthereisnowayabeeshouldbeabletoflyitswingsaretoosmalltogetitsfatlittlebodyoffthegroundthebeeofcoursefliesanywaybecausebeesdontcarewhathumansthinkisimpossibleyellowblackyellowblackyellowblackyellowblackoohblackandyellowletsshakeitupalittlebarrybreakfastisreadycominghangonasecondhellobarryadamcanyoubelievethisishappeningicantillpickyouuplookingsharpusethestairsyourfatherpaidgoodmoneyforthosesorryimexcitedheresthegraduatewereveryproudofyousonaperfectreportcardallbsveryproudmaigotathinggoinghereyougotlintonyourfuzzowthatsmewavetouswellbeinrow118000byebarryitoldyoustopflyinginthehouseheyadamheybarryisthatfuzzgelalittlespecialdaygraduationneverthoughtidmakeitthreedaysgradeschoolthreedayshighschoolthosewerea@example.com",
-    "RFC 5322 limits length lengths in email headers to 998 characters, so you can only fit the first ~2.5 minutes of the Bee Movie script before it's too long.",
+    "RFC 5322 limits the line length of headers to 998 characters, so you can only fit the first ~2.5 minutes of the Bee Movie script before it's too long.",
     ["long"]
   ),
   valid(
@@ -108,9 +108,9 @@ const questions: QuizQuestion[] = [
   ),
   valid(
     "poop@[💩]",
-    "As far as I can tell from reading RFC 6532, this is valid. lol. lmao, even."
+    "Actually they kinda just let you do anything. As far as I can tell from reading RFC 6532, this is valid. lol. lmao, even."
   ),
-  valid("👉@👈", "I can't believe it, either."),
+  valid("👉@👈", "Yeah, I can't believe it either."),
   valid(
     '"@"@[@]',
     "You should complain to your provider if they don't allow you to send mail to this one."
