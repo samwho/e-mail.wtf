@@ -124,7 +124,7 @@ const questions: QuizQuestion[] = [
     "You should complain to your provider if they don't allow you to send mail to this one."
   ),
   valid(
-    `"'()'"("''”)@example.com`,
+    `"'()'"("''")@example.com`,
     "This ends up being interpreted as <code>'()'@example.com</code>, which is totally valid."
   ),
   invalid(
