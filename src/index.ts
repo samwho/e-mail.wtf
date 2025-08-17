@@ -119,6 +119,10 @@ const questions: QuizQuestion[] = [
     '"@"@[@]',
     "You should complain to your provider if they don't allow you to send mail to this one."
   ),
+  invalid(
+    "i...wonder@example.com",
+    "Consecutive dots aren't allowed anywhere outside of quotes."
+  ),
   valid(
     "c̷̨̈́i̵̮̅l̶̠̐͊͝ȁ̷̠̗̆̍̍n̷͖̘̯̍̈͒̅t̶͍͂͋ř̵̞͈̓ȯ̷̯̠-̸͚̖̟͋s̴͉̦̭̔̆̃͒û̵̥̪͆̒̕c̸̨̨̧̺̎k̵̼͗̀s̸̖̜͍̲̈́͋̂͠@example.com",
     "Thanks to RFC 6532, <a href='https://en.wikipedia.org/wiki/Zalgo_text'>Zalgo text</a> is a-okay."
