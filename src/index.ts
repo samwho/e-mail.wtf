@@ -5,6 +5,7 @@ interface QuizQuestion {
   email: string;
   answer: "valid" | "invalid";
   explanation: string;
+  classes?: string[];
 }
 
 // Theme management
@@ -39,12 +40,26 @@ function toggleTheme(): void {
 (window as any).toggleTheme = toggleTheme;
 
 // Helper functions for creating quiz questions
-function valid(email: string, explanation: string): QuizQuestion {
-  return { email, answer: "valid", explanation };
+function valid(
+  email: string,
+  explanation: string,
+  classes?: string[]
+): QuizQuestion {
+  return { email: formatEmail(email), answer: "valid", explanation, classes };
 }
 
-function invalid(email: string, explanation: string): QuizQuestion {
-  return { email, answer: "invalid", explanation };
+function invalid(
+  email: string,
+  explanation: string,
+  classes?: string[]
+): QuizQuestion {
+  return { email: formatEmail(email), answer: "invalid", explanation, classes };
+}
+
+function formatEmail(email: string) {
+  return email
+    .replaceAll(" ", "<span class='space'>␣</span>")
+    .replaceAll("\n", "<span class='space'>\n</span>");
 }
 
 // Quiz functionality
@@ -58,30 +73,36 @@ const rawQuestions: QuizQuestion[] = [
   invalid("@example.com", "Nor can you have one without a local part."),
   valid(
     "easy@example",
-    "Surprisingly, this is valid! Top-level domains are not required by RFC 5322."
-  ),
-  valid(
-    '"test@test"@example.com',
-    "Quoted strings in the local part can contain @ symbols and other special characters."
+    "This is technically valid but considered obsolete. RFC 822 allowed domains without dots, but RFC 2822 made this obsolete."
   ),
   invalid(
-    "user..name@example.com",
-    "Consecutive dots are not allowed in the local part."
-  ),
-  invalid(".user@example.com", "The local part cannot start with a dot."),
-  invalid("user.@example.com", "The local part cannot end with a dot."),
-  invalid("user@ex ample.com", "Spaces are not allowed in the domain part."),
-  valid(
-    "very.long.email.address.that.keeps.going.and.going@example.com",
-    "Long email addresses are valid as long as they don't exceed 320 characters total."
+    "what about spaces@example.com",
+    "Spaces aren't allowed between words. I'll be using the ␣ character to make spaces obvious."
   ),
   valid(
-    "user@example.com.",
-    "A trailing dot in the domain is valid (it represents the DNS root)."
+    " maybe-like-this @example.com",
+    "That's actually allowed for some reason. The spaces should be ignored. My email client doesn't like this."
+  ),
+  invalid(
+    "tailing-dot.@example.com",
+    "The local part cannot start or end with a dot. Dots in the middle are fine."
   ),
   valid(
-    "user@[192.168.1.1]",
-    "IP addresses in square brackets are valid domain formats."
+    "fed-up-yet@ example.com ",
+    "Similar to the local part, the domain part can also have spaces around it. Not allowed in the middle, though."
+  ),
+  valid(
+    '":(){ :|:& };:"@example.com',
+    "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address."
+  ),
+  invalid(
+    "accordingtoallknownlawsofaviationthereisnowayabeeshouldbeabletoflyitswingsaretoosmalltogetitsfatlittlebodyoffthegroundthebeeofcoursefliesanywaybecausebeesdontcarewhathumansthinkisimpossibleyellowblackyellowblackyellowblackyellowblackoohblackandyellowletsshakeitupalittlebarrybreakfastisreadycominghangonasecondhellobarryadamcanyoubelievethisishappeningicantillpickyouuplookingsharpusethestairsyourfatherpaidgoodmoneyforthosesorryimexcitedheresthegraduatewereveryproudofyousonaperfectreportcardallbsveryproudmaigotathinggoinghereyougotlintonyourfuzzowthatsmewavetouswellbeinrow118000byebarryitoldyoustopflyinginthehouseheyadamheybarryisthatfuzzgelalittlespecialdaygraduationneverthoughtidmakeitthreedaysgradeschoolthreedayshighschoolthosewerea@example.com",
+    "RFC 5322 limits length lengths in email headers to 998 characters, so you can only fit the first ~2.5 minutes of the Bee Movie script before it's too long.",
+    ["long"]
+  ),
+  valid(
+    "magic@[::1]",
+    "The square bracket syntax allows you to specify IP addresses instead of domains, and ::1 is the shorthand for localhost in IPv6."
   ),
   valid(
     "user+tag+another@example.com",
@@ -158,15 +179,16 @@ function showQuestion(): void {
   const question = questions[currentQuestionIndex];
   if (!question) return;
 
-  const currentQuestionEl = document.getElementById("currentQuestion");
-  const emailDisplayEl = document.getElementById("emailDisplay");
+  const currentQuestionEl = document.getElementById("currentQuestion")!;
+  const emailContainer = document.getElementById("emailContainer")!;
+  const emailDisplayEl = document.getElementById("emailDisplay")!;
 
-  if (currentQuestionEl) {
-    currentQuestionEl.textContent = (currentQuestionIndex + 1).toString();
-  }
+  currentQuestionEl.textContent = (currentQuestionIndex + 1).toString();
+  emailDisplayEl.innerHTML = question.email;
 
-  if (emailDisplayEl) {
-    emailDisplayEl.textContent = question.email;
+  emailContainer.className = "email-container";
+  if (question.classes) {
+    emailContainer.classList.add(...question.classes);
   }
 
   const optionsContainer = document.getElementById("options");
