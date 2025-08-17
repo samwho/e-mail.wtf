@@ -97,6 +97,7 @@ const questions: QuizQuestion[] = [
     "(@)@example.com",
     "Comments don't count as part of the email address, so this is invalid for having no local part."
   ),
+  valid('""@example.com', "And yet, this is valid. I don't know why."),
   valid(
     '":(){ :|:& };:"@example.com',
     "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address. This is invalid without the quotes."
@@ -118,6 +119,10 @@ const questions: QuizQuestion[] = [
   valid(
     '"@"@[@]',
     "You should complain to your provider if they don't allow you to send mail to this one."
+  ),
+  valid(
+    `"'()'"("''”)@example.com`,
+    "This ends up being interpreted as <code>'()'@example.com</code>, which is totally valid."
   ),
   invalid(
     "i...wonder@example.com",
