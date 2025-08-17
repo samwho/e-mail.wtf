@@ -82,7 +82,7 @@ const questions: QuizQuestion[] = [
     "That's actually allowed for some reason. The spaces get ignored by the spec. My email client rejects this, though."
   ),
   invalid(
-    "tailing-dot.@example.com",
+    "trailing-dot.@example.com",
     "The local part cannot start or end with a dot. Dots in the middle are fine."
   ),
   valid(
