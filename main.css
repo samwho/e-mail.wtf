@@ -513,6 +513,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   max-width: 600px;
   text-align: center;
   padding: var(--spacing-lg);
@@ -525,6 +526,16 @@ h1 {
   width: 100%;
   min-height: 10rem;
   font-variant-numeric: lining-nums;
+  position: relative;
+}
+
+.explanation-emoji {
+  font-size: 1.5rem;
+}
+
+.explanation-content {
+  flex: 1;
+  margin-left: 2rem;
 }
 
 .explanation.correct {

@@ -99,7 +99,7 @@ const questions: QuizQuestion[] = [
   ),
   valid(
     '":(){ :|:& };:"@example.com',
-    "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb'>fork bomb</a> as your email address. The quotes don't end up as part of the email address."
+    "Provided you put quotes around it, you can indeed have a <a href='https://en.wikipedia.org/wiki/Fork_bomb' target='_blank'>fork bomb</a> as your email address. The quotes don't end up as part of the email address."
   ),
   valid(
     '""@example.com',
@@ -133,7 +133,7 @@ const questions: QuizQuestion[] = [
   ),
   valid(
     "c̷̨̈́i̵̮̅l̶̠̐͊͝ȁ̷̠̗̆̍̍n̷͖̘̯̍̈͒̅t̶͍͂͋ř̵̞͈̓ȯ̷̯̠-̸͚̖̟͋s̴͉̦̭̔̆̃͒û̵̥̪͆̒̕c̸̨̨̧̺̎k̵̼͗̀s̸̖̜͍̲̈́͋̂͠@example.com",
-    "Thanks to RFC 6532, <a href='https://en.wikipedia.org/wiki/Zalgo_text'>Zalgo text</a> is a-okay."
+    "Thanks to RFC 6532, <a href='https://en.wikipedia.org/wiki/Zalgo_text' target='_blank'>Zalgo text</a> is a-okay."
   ),
 ];
 
@@ -230,7 +230,13 @@ function selectOption(index: number): void {
 
   const explanation = document.getElementById("explanation");
   if (explanation) {
-    explanation.innerHTML = `<p>${question.explanation}</p>`;
+    const emoji = isCorrect ? "✅" : "❌";
+    explanation.innerHTML = `
+      <div class="explanation-emoji">${emoji}</div>
+      <div class="explanation-content">
+        <p>${question.explanation}</p>
+      </div>
+    `;
     explanation.style.visibility = "visible";
     explanation.classList.add(isCorrect ? "correct" : "incorrect");
   }
