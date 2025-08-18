@@ -231,8 +231,10 @@ function selectOption(index: number): void {
   const explanation = document.getElementById("explanation");
   if (explanation) {
     const emoji = isCorrect ? "✅" : "❌";
+    const text =
+      question.answer === "valid" ? "This is valid." : "This is invalid.";
     explanation.innerHTML = `
-      <div class="explanation-emoji">${emoji}</div>
+      <div class="explanation-emoji">${emoji} ${text}</div>
       <div class="explanation-content">
         <p>${question.explanation}</p>
       </div>
