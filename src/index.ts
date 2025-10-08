@@ -65,7 +65,7 @@ const questions: QuizQuestion[] = [
   valid("easy@example.com", "No tricks here, just easing you into it."),
   valid(
     "easy+tag@example.com",
-    "The + symbol is allowed, and email servers often treat is specially by ignoring anything after it. Very useful!"
+    "The + symbol is allowed, and email servers often treat it specially by ignoring anything after it. Very useful!"
   ),
   invalid("easy@", "Can't have an email address without a domain."),
   invalid("@example.com", "Nor can you have one without a local part."),
