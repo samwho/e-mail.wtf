@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "bun build ./src/index.ts ./src/validator.ts --sourcemap=linked --public-path=./ --outdir ./out --target browser --minify --watch"
+    "build": "bun build ./src/index.ts ./src/validator.ts --public-path=./ --outdir ./public/out --target browser --minify",
+    "dev": "bun run build --watch"
   },
   "devDependencies": {
     "@types/bun": "latest"
